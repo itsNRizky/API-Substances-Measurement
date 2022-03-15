@@ -105,5 +105,15 @@ exports.deleteExperimentByID = (req, res) => {
 // Table Records
 exports.getRecordsByExperiment = (req, res) => {
   const experiment = req.params.experiment
-  db.query(`SELECT * FROM rec`)
-} //INI BELUM SELESE
+  db.query(`SELECT * FROM records WHERE records.records_experiment = ${experiment}`, (err, data) => {
+    if (err){
+      console.error(`||Error getting records by Experiments|| \n${err.stack}`)
+    }
+
+    response.ok(data, res)
+  })
+}
+
+exports.insertRecord = (req, res) => {
+  
+}
