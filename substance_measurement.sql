@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.1
+-- version 5.0.4
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 12, 2022 at 02:26 PM
--- Server version: 10.4.22-MariaDB
--- PHP Version: 8.1.2
+-- Generation Time: Mar 16, 2022 at 05:43 AM
+-- Server version: 10.4.17-MariaDB
+-- PHP Version: 8.0.2
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -28,23 +28,25 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `experiments` (
-  `experiments_id` int(11) NOT NULL,
-  `experiments_name` varchar(255) NOT NULL,
+  `experiments_id` int(8) NOT NULL,
+  `experiments_name` varchar(30) NOT NULL,
   `experiments_desc` text NOT NULL,
-  `experiments_owner` varchar(255) DEFAULT NULL
+  `experiments_state` enum('start','doing','finished') NOT NULL,
+  `experiments_user` int(8) DEFAULT NULL,
+  `experiments_scales` int(8) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `record`
+-- Table structure for table `records`
 --
 
-CREATE TABLE `record` (
-  `record_id` int(255) NOT NULL,
-  `record_value` float NOT NULL,
-  `record_timestamp` datetime NOT NULL,
-  `record_experiments` int(11) DEFAULT NULL
+CREATE TABLE `records` (
+  `records_id` int(8) NOT NULL,
+  `records_value` float NOT NULL,
+  `records_timestamp` datetime NOT NULL,
+  `records_experiments` int(8) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -54,8 +56,28 @@ CREATE TABLE `record` (
 --
 
 CREATE TABLE `scales` (
-  `scales_id` varchar(255) NOT NULL,
-  `scales_owner` varchar(255) NOT NULL
+  `scales_id` int(8) NOT NULL,
+  `scales_device` varchar(255) NOT NULL,
+  `scales_name` varchar(30) NOT NULL,
+  `scales_state` enum('on','off') NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `scales`
+--
+
+INSERT INTO `scales` (`scales_id`, `scales_device`, `scales_name`, `scales_state`) VALUES
+(1, 'f34rew4rfhuf4f434f', 'Timbangan Satu', 'off');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `users_id` int(8) NOT NULL,
+  `users_name` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -67,20 +89,27 @@ CREATE TABLE `scales` (
 --
 ALTER TABLE `experiments`
   ADD PRIMARY KEY (`experiments_id`),
-  ADD KEY `experiment's_owner` (`experiments_owner`);
+  ADD KEY `experiment's owner` (`experiments_user`),
+  ADD KEY `scale used` (`experiments_scales`);
 
 --
--- Indexes for table `record`
+-- Indexes for table `records`
 --
-ALTER TABLE `record`
-  ADD PRIMARY KEY (`record_id`),
-  ADD KEY `record's_experiment` (`record_experiments`);
+ALTER TABLE `records`
+  ADD PRIMARY KEY (`records_id`),
+  ADD KEY `record's experiment` (`records_experiments`);
 
 --
 -- Indexes for table `scales`
 --
 ALTER TABLE `scales`
   ADD PRIMARY KEY (`scales_id`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`users_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -90,13 +119,25 @@ ALTER TABLE `scales`
 -- AUTO_INCREMENT for table `experiments`
 --
 ALTER TABLE `experiments`
-  MODIFY `experiments_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `experiments_id` int(8) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `record`
+-- AUTO_INCREMENT for table `records`
 --
-ALTER TABLE `record`
-  MODIFY `record_id` int(255) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `records`
+  MODIFY `records_id` int(8) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `scales`
+--
+ALTER TABLE `scales`
+  MODIFY `scales_id` int(8) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `users_id` int(8) NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables
@@ -106,13 +147,14 @@ ALTER TABLE `record`
 -- Constraints for table `experiments`
 --
 ALTER TABLE `experiments`
-  ADD CONSTRAINT `experiment's_owner` FOREIGN KEY (`experiments_owner`) REFERENCES `scales` (`scales_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+  ADD CONSTRAINT `experiment's owner` FOREIGN KEY (`experiments_user`) REFERENCES `users` (`users_id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `scale used` FOREIGN KEY (`experiments_scales`) REFERENCES `scales` (`scales_id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
--- Constraints for table `record`
+-- Constraints for table `records`
 --
-ALTER TABLE `record`
-  ADD CONSTRAINT `record's_experiment` FOREIGN KEY (`record_experiments`) REFERENCES `experiments` (`experiments_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `records`
+  ADD CONSTRAINT `record's experiment` FOREIGN KEY (`records_experiments`) REFERENCES `experiments` (`experiments_id`) ON DELETE SET NULL ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
