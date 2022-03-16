@@ -8,3 +8,12 @@ exports.ok = (values, res) => {
   res.json(data)
   res.end()
 }
+
+exports.failed = (values, res) => {
+  let data = {
+    status : 400,
+    values : values
+  }
+  res.json(data)
+  res.end()
+}

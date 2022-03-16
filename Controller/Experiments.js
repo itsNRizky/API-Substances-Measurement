@@ -13,8 +13,8 @@ exports.getExperimentsByID = (req, res) => {
 }
 
 exports.getExperimentsByUser = (req, res) => {
-  const user_id = req.params.user_id
-  db.query(`SELECT * FROM experiments WHERE experiments_user = '${user_id}';`, (err, data) => {
+  const user_id = req.params.id
+  db.query(`SELECT * FROM experiments WHERE experiments_user = '${user_id}'`, (err, data) => {
     if (err){
       console.error(`||Error getting experiments data by user: ${user_id}|| \n${err.stack}`)
     }

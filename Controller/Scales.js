@@ -46,7 +46,7 @@ exports.deleteScaleByID = (req, res) => {
 }
 
 exports.updateScaleByID = (req, res) => {
-  const id = req.body.id
+  const id = req.body.id //use hidden form in frontend
   const device = req.body.device
   const name = req.body.name
   db.query(`UPDATE scales SET scales_device = '${device}', scales_name = '${name}' WHERE scales.scales_id = ${id} `, (err, data) => {
