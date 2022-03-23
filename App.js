@@ -27,6 +27,7 @@ app.post(`/api/scales/`, scales.insertScale)
 app.put('/api/scales/', scales.updateScaleByID)
 app.put('/api/scales/on/:id', scales.setScaleStateOnByID)
 app.put('/api/scales/off/:id', scales.setScaleStateOffByID)
+app.get('/api/scales/:condition/:conVal', scales.getScaleByCustom)
 app.get('/api/scales/:id', scales.getScaleByID)
 app.delete('/api/scales/:id', scales.deleteScaleByID)
 

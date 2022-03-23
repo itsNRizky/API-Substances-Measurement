@@ -22,6 +22,18 @@ exports.getScaleByID = (req, res) => {
   })
 }
 
+exports.getScaleByCustom = (req, res) => {
+  const condition = req.params.condition
+  const conVal = req.params.conVal
+  db.query(`SELECT * FROM scales WHERE ${condition} = '${conVal}'`, (err, data) => {
+    if (err){
+      console.error(`||Error getting data by ${condition} = ${conVal}\n${err.stack}`)
+    }
+
+    response.ok(data, res)
+  })
+}
+
 exports.insertScale = (req, res) => {
   const device = req.body.device
   const name = req.body.name
